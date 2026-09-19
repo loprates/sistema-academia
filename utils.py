@@ -12,165 +12,233 @@ def valida_cpf(cpf):
     # Cálculo do primeiro dígito verificador
     soma = sum(int(cpf[i]) * (10 - i) for i in range(9))
     digito1 = (soma * 10) % 11
+
     if digito1 == 10:
         digito1 = 0
         
     # Cálculo do segundo dígito verificador
     soma = sum(int(cpf[i]) * (11 - i) for i in range(10))
     digito2 = (soma * 10) % 11
+
     if digito2 == 10:
         digito2 = 0
         
     # Compara os dígitos calculados com os informados
     return digito1 == int(cpf[9]) and digito2 == int(cpf[10])
 
+
 atividades = ['Musculação', 'Pilates', 'Zumba']
 estados_matricula = ['Ativo', 'Inativo']
+
 
 try:
     with open("alunos.json", "r", encoding="utf-8") as arquivo:
         alunos = json.load(arquivo)
-except FileNotFoundError:
 
+except FileNotFoundError:
     alunos = []
+
 
 def salvar_dados():
     with open("alunos.json", "w", encoding="utf-8") as arquivo:
         json.dump(alunos, arquivo, ensure_ascii=False, indent=4)
 
+
 def criar_id(alunos):
     if len(alunos) == 0:
         return 1
     else:
-        return alunos[-1]['id'] + 1
+        maior_id = max(aluno['id'] for aluno in alunos)
+        return maior_id + 1
+
 
 def cadastrar_aluno():
 
+    # Validação do CPF
+    while True:
         cpf = input("Digite o CPF do aluno: ").strip()
 
-        while not valida_cpf(cpf):
+        cpf = re.sub(r'\D', '', cpf)
+
+        if not valida_cpf(cpf):
             print("CPF inválido!")
-            cpf = input("Digite o CPF novamente: ").strip()
+            continue
+
+        cpf_cadastrado = False
+
+        for aluno in alunos:
+            if aluno['cpf'] == cpf:
+                cpf_cadastrado = True
+                break
+
+        if cpf_cadastrado:
+            print("CPF já cadastrado!")
+            continue
 
         print("CPF válido!")
+        break
 
-        aluno = {
-            'id': criar_id(alunos),
-            'nome': input("Digite o nome do aluno: ").strip(),
-            'cpf': cpf,
-            'atividade': int(input(
+    # Nome do aluno
+    while True:
+        nome = input("Digite o nome do aluno: ").strip()
+
+        if nome == "":
+            print("Digite um nome válido!")
+        else:
+            break
+
+    # Escolha da atividade
+    while True:
+        try:
+            atividade = int(input(
                 "Digite a atividade: [0] Musculação | [1] Pilates | [2] Zumba: "
-            )),
-            'estado_matricula': int(input(
+            ))
+
+            if atividade < 0 or atividade > 2:
+                print("Digite um valor válido!")
+            else:
+                break
+
+        except ValueError:
+            print("Digite apenas números!")
+
+    # Escolha da matrícula
+    while True:
+        try:
+            matricula = int(input(
                 "[0] Ativo | [1] Inativo: "
-            )),
-            'presença': 0
-        }
+            ))
 
-        alunos.append(aluno)
+            if matricula < 0 or matricula > 1:
+                print("Digite um valor válido!")
+            else:
+                break
 
+        except ValueError:
+            print("Digite apenas números!")
 
+    # Criação do aluno
+    aluno = {
+        'id': criar_id(alunos),
+        'nome': nome,
+        'cpf': cpf,
+        'atividade': atividades[atividade],
+        'estado_matricula': estados_matricula[matricula],
+        'presença': 0
+    }
 
-        if aluno['atividade'] == 0:
-            aluno['atividade'] = atividades[0]
+    alunos.append(aluno)
 
-        elif aluno['atividade'] == 1:
-            aluno['atividade'] = atividades[1]
-
-        elif aluno['atividade'] == 2:
-            aluno['atividade'] = atividades[2]
-
-        else:
-            while True:
-                atividade = int(input(
-                    "Valor inválido, digite novamente: "
-                     "[0] Musculação | [1] Pilates | [2] Zumba: "
-                    ))
-
-                if atividade > 2 or atividade < 0:
-                        print("Digite um valor válido")
-
-                else:
-                    aluno['atividade'] = atividades[atividade]
-                    salvar_dados()
-                    break
-
-        if aluno['estado_matricula'] == 0:
-                aluno['estado_matricula'] = estados_matricula[0]
-
-        elif aluno['estado_matricula'] == 1:
-                aluno['estado_matricula'] = estados_matricula[1]
-
-        else:
-            while True:
-                matricula = int(input(
-                    "Valor inválido, digite novamente: "
-                    "[0] Ativo | [1] Inativos: "
-                ))
-
-                if matricula > 1 or matricula < 0:
-                    print("Digite um valor válido")
-
-                else:
-                    aluno['estado_matricula'] = estados_matricula[matricula]
-                    salvar_dados()
-                    break
 
 def listar_alunos():
     for aluno in alunos:
-        print(f"ID: {aluno['id']}\n Aluno: {aluno['nome']}\n CPF: {aluno['cpf']}\n Matricula: {aluno['estado_matricula']}\n Presença: {aluno['presença']}")
+        print(
+            f"ID: {aluno['id']}\n"
+            f" Aluno: {aluno['nome']}\n"
+            f" CPF: {aluno['cpf']}\n"
+            f" Atividade: {aluno['atividade']}\n"
+            f" Matricula: {aluno['estado_matricula']}\n"
+            f" Presença: {aluno['presença']}"
+        )
+
 
 def atualizar_aluno():
 
-        procura_aluno = str(input("Digite o nome do aluno: "))
-        for aluno in alunos:
+    procura_aluno = str(input("Digite o nome do aluno: "))
 
-            if procura_aluno == aluno['nome']:
+    for aluno in alunos:
 
-                print("""
-                    1 - Registrar presença
-                    2 - Atualizar matricula
-                """)
+        if procura_aluno == aluno['nome']:
 
-                opcao = int(input("Digite a opção: "))
+            print("""
+                1 - Registrar presença
+                2 - Atualizar matricula
+            """)
 
-                if opcao == 1:
+            while True:
+                try:
+                    opcao = int(input("Digite a opção: "))
 
-                    print("1 - Adicionar presença | 2 - Remover presença")
-                    opcao1 = int(input())
-                    if opcao1 == 1:
-                        if not aluno['estado_matricula'] == "Ativo":
-
-                            print("Não é possivel registrar presença de um aluno sem a matricula ativa")
-                            break
-                        aluno['presença'] += 1
-                        salvar_dados()
+                    if opcao < 1 or opcao > 2:
+                        print("Digite um valor válido!")
+                    else:
                         break
 
+                except ValueError:
+                    print("Digite apenas números!")
 
-                    elif opcao1 == 2:
-                        aluno['presença'] -= 1
+            if opcao == 1:
 
-                        if aluno['presença'] < 0:
-                            print("O aluno não pode ter uma presença negativa!")
-                            aluno['presença'] = 0
-                        
-                        salvar_dados()
-                        break    
+                print("1 - Adicionar presença | 2 - Remover presença")
 
-                if opcao == 2:
-                    if aluno['estado_matricula'] == 'Ativo':
-                        aluno['estado_matricula'] = 'Inativo'
-                        salvar_dados()
-                        
-                    elif aluno['estado_matricula'] == 'Inativo':
-                        aluno['estado_matricula'] = 'Ativo'
-                        salvar_dados()
-                        
+                while True:
+                    try:
+                        opcao1 = int(input())
+
+                        if opcao1 < 1 or opcao1 > 2:
+                            print("Digite um valor válido!")
+                        else:
+                            break
+
+                    except ValueError:
+                        print("Digite apenas números!")
+
+                if opcao1 == 1:
+
+                    if not aluno['estado_matricula'] == "Ativo":
+                        print("Não é possivel registrar presença de um aluno sem a matricula ativa")
+                        break
+
+                    aluno['presença'] += 1
+                    salvar_dados()
                     break
 
+                elif opcao1 == 2:
+
+                    aluno['presença'] -= 1
+
+                    if aluno['presença'] < 0:
+                        print("O aluno não pode ter uma presença negativa!")
+                        aluno['presença'] = 0
+
+                    salvar_dados()
+                    break
+
+            if opcao == 2:
+
+                if aluno['estado_matricula'] == 'Ativo':
+                    aluno['estado_matricula'] = 'Inativo'
+                    salvar_dados()
+
+                elif aluno['estado_matricula'] == 'Inativo':
+                    aluno['estado_matricula'] = 'Ativo'
+                    salvar_dados()
+
+                break
+
+    else:
+        print("Aluno não encontrado!")
+
+
 def excluir_aluno():
-    remover_a = str(input("Digite o nome do aluno: "))
+
+    while True:
+        try:
+            remover_a = int(input("Digite o id do aluno: "))
+            break
+
+        except ValueError:
+            print("Digite apenas números!")
+
     for aluno in alunos:
-        if remover_a == aluno['nome']:
+        if remover_a == aluno['id']:
+            print(
+                f"\nID: {aluno['id']}"
+                f"\nNome: {aluno['nome']}"
+                f"\nCPF: {aluno['cpf']}"
+            )
+
             alunos.remove(aluno)
+            return
+
+    print("Aluno não encontrado!")

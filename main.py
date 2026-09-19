@@ -1,5 +1,6 @@
 from utils import salvar_dados, criar_id, cadastrar_aluno, listar_alunos, atualizar_aluno, excluir_aluno
 
+
 escolha = None
 
 while escolha != 0:
@@ -11,9 +12,15 @@ while escolha != 0:
     4 - Excluir aluno
     0 - Sair
               """)
-    
-    escolha = int(input())
-    
+
+    while True:
+        try:
+            escolha = int(input())
+            break
+
+        except ValueError:
+            print("Digite apenas números!")
+
     if escolha == 1:
         cadastrar_aluno()
         salvar_dados()

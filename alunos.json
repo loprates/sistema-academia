@@ -1,16 +1,8 @@
 [
     {
-        "id": 1,
-        "nome": "Daniel",
-        "cpf": "2",
-        "atividade": "Musculação",
-        "estado_matricula": "Ativo",
-        "presença": 3
-    },
-    {
         "id": 2,
-        "nome": "Mimi",
-        "cpf": "674269",
+        "nome": "Daniel",
+        "cpf": "05765825737",
         "atividade": "Pilates",
         "estado_matricula": "Ativo",
         "presença": 0
@@ -20,15 +12,15 @@
         "nome": "Daniel",
         "cpf": "20967908752",
         "atividade": "Musculação",
-        "estado_matricula": 0,
+        "estado_matricula": "Ativo",
         "presença": 0
     },
     {
         "id": 4,
-        "nome": "udubda",
+        "nome": "daniel",
         "cpf": "20967908752",
         "atividade": "Musculação",
-        "estado_matricula": 0,
+        "estado_matricula": "Ativo",
         "presença": 0
     }
 ]
