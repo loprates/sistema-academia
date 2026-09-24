@@ -22,5 +22,13 @@
         "atividade": "Musculação",
         "estado_matricula": "Ativo",
         "presença": 0
+    },
+    {
+        "id": 5,
+        "nome": "Mimi",
+        "cpf": "19180224709",
+        "atividade": "Musculação",
+        "estado_matricula": "Ativo",
+        "presença": 0
     }
 ]

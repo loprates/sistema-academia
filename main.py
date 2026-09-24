@@ -1,4 +1,4 @@
-from utils import salvar_dados, criar_id, cadastrar_aluno, listar_alunos, atualizar_aluno, excluir_aluno
+from utils import salvar_dados, criar_id, cadastrar_aluno, listar_alunos, registrar_presenca, excluir_aluno
 
 
 escolha = None
@@ -15,7 +15,7 @@ while escolha != 0:
 
     while True:
         try:
-            escolha = int(input())
+            escolha = int(input('Digite uma opção: '))
             break
 
         except ValueError:
@@ -32,7 +32,7 @@ while escolha != 0:
         continue
 
     elif escolha == 3:
-        atualizar_aluno()
+        registrar_presenca()
         salvar_dados()
         continue
 

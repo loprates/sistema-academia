@@ -142,83 +142,33 @@ def listar_alunos():
         )
 
 
-def atualizar_aluno():
+def registrar_presenca():
 
-    procura_aluno = str(input("Digite o nome do aluno: "))
+    while True:
+        listar_alunos()
+        pass
 
-    for aluno in alunos:
-
-        if procura_aluno == aluno['nome']:
-
-            print("""
-                1 - Registrar presença
-                2 - Atualizar matricula
-            """)
-
-            while True:
-                try:
-                    opcao = int(input("Digite a opção: "))
-
-                    if opcao < 1 or opcao > 2:
-                        print("Digite um valor válido!")
-                    else:
-                        break
-
-                except ValueError:
-                    print("Digite apenas números!")
-
-            if opcao == 1:
-
-                print("1 - Adicionar presença | 2 - Remover presença")
-
-                while True:
-                    try:
-                        opcao1 = int(input())
-
-                        if opcao1 < 1 or opcao1 > 2:
-                            print("Digite um valor válido!")
-                        else:
-                            break
-
-                    except ValueError:
-                        print("Digite apenas números!")
-
-                if opcao1 == 1:
-
-                    if not aluno['estado_matricula'] == "Ativo":
-                        print("Não é possivel registrar presença de um aluno sem a matricula ativa")
-                        break
-
+        presenca_aluno = int(input('Digite o ID do aluno: '))
+        for aluno in alunos:
+            if aluno['id'] == presenca_aluno:
+                print('\n [1] Adicionar presença | [2] Remover presença')
+                opcao_r = int(input('Digite uma das opcões acima: '))
+                if opcao_r == 1:
                     aluno['presença'] += 1
-                    salvar_dados()
                     break
 
-                elif opcao1 == 2:
-
+                elif opcao_r == 2:
                     aluno['presença'] -= 1
-
                     if aluno['presença'] < 0:
-                        print("O aluno não pode ter uma presença negativa!")
+                        print('Um aluno não pode ter presença negativa!')
                         aluno['presença'] = 0
-
-                    salvar_dados()
                     break
 
-            if opcao == 2:
+def atualizar_matricular():
+    listar_alunos()
+    pass
 
-                if aluno['estado_matricula'] == 'Ativo':
-                    aluno['estado_matricula'] = 'Inativo'
-                    salvar_dados()
-
-                elif aluno['estado_matricula'] == 'Inativo':
-                    aluno['estado_matricula'] = 'Ativo'
-                    salvar_dados()
-
-                break
-
-    else:
-        print("Aluno não encontrado!")
-
+    matricula_aluno = 
 
 def excluir_aluno():
 
